@@ -4,49 +4,17 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "functions.h"
+#include "stack.h"
 
 int pc = 0;
-
-unsigned int code1[] = {
-        (PUSHC << 24) | IMMEDIATE(3),
-        (PUSHC << 24) | IMMEDIATE(4),
-        (ADD << 24),
-        (PUSHC << 24) | IMMEDIATE(10),
-        (PUSHC << 24) | IMMEDIATE(6),
-        (SUB << 24),
-        (MUL << 24),
-        (WRINT << 24),
-        (PUSHC << 24) | IMMEDIATE(10),
-        (WRCHR << 24),
-        (HALT << 24)
-};
-
-unsigned int code2[] = {
-        (PUSHC << 24) | IMMEDIATE(-2),
-        (RDINT << 24),
-        (MUL << 24),
-        (PUSHC << 24) | IMMEDIATE(3),
-        (ADD << 24),
-        (WRINT << 24),
-        (PUSHC << 24) | IMMEDIATE('\n'),
-        (WRCHR << 24),
-        (HALT << 24)
-};
-
-unsigned int code3[] = {
-        (RDCHR << 24),
-        (WRINT << 24),
-        (PUSHC << 24) | IMMEDIATE('\n'),
-        (WRCHR << 24),
-        (HALT << 24)
-};
+int frameP = 0;
 
 int halt(){
     return 0;
 }
 
 void pushc(int value){
-    pushs(value);
+   pushs(value);
 }
 
 void add(){
@@ -96,6 +64,32 @@ void rdchr(){
 
 void rwchr(){
     printf("%c", pop());
+}
+
+void pushg(int position){
+    pushc(statDaA[position]);
+}
+
+void popg(int position){
+    statDaA[position] = pop();
+}
+void asf(int bucketNeeded){
+    pushc(sp);
+    frameP = sp;
+    sp+=bucketNeeded;
+}
+
+void rsf(){
+    sp = frameP;
+    frameP = pop();
+}
+
+void pushl(int position){
+    pushc(stack[frameP+position]);
+}
+
+void popl(int position){
+    stack[frameP+position] = pop();
 }
 
 int launchProzess(unsigned int *prog){

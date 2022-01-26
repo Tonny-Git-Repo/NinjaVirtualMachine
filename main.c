@@ -2,15 +2,21 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-#include "stack.h"
 #include "functions.h"
 
-#define VERSION 1
+#define VERSION 2
 
+FILE *fp;
+char extens[4];
+int vers;
+int instructions;
+int anzahlStatVar;
+int *statDaA;
+unsigned int *programm;
 
 int main(int argc, char *argv[]) {
 
+    fp = NULL;
     if (argv[1] != NULL) {
 
        if (strcmp(argv[1], "--help") == 0) {
@@ -20,16 +26,32 @@ int main(int argc, char *argv[]) {
                   "  --version\tshow version and exit", "  --help\tshow this help and exit");
        } else if (strcmp(argv[1], "--version") == 0) {
             printf("Ninja Virtual Machine version %d (compiled %s, %s)\n", VERSION, __DATE__, __TIME__);
-       }else if (strcmp(argv[1], "--prog1") == 0){
-           launchProzess(code1);
-       }else if (strcmp(argv[1], "--prog2") == 0){
-           launchProzess(code2);
-       }else if (strcmp(argv[1], "--prog3") == 0){
-           launchProzess(code3);
        }else {
-           printf("unknown command line argument '--%s', try './njvm --help'\n", argv[1]);
-       }
+           fp = fopen(argv[1],"rb");
+           if(fp == NULL){
+               printf("Error beim Öffnen der Datei !\n");
+           }else{
+               fread(extens,sizeof(char), 4, fp);
+               if(strcmp("NJBF",extens)!= 0){
+                   printf("Error: file %s has wrong format\n",argv[1]);
+               }else{
+                   fread(&vers, sizeof(int), 1, fp );
+                   if(vers != VERSION){
+                       printf("Error: file %s has wrong version number\n", argv[1]);
+                   }else{
+                       fread(&anzahlStatVar, sizeof (int), 1, fp);
+                       statDaA = malloc(anzahlStatVar * sizeof (unsigned int));
 
+                       fread(&instructions, sizeof (int), 1, fp);
+                       programm = malloc(instructions * sizeof (unsigned int));
+                       fread(programm, sizeof (unsigned int), instructions, fp);
+                       launchProzess(programm);
+                       free(statDaA);
+                   }
+               }
+           }
+           fclose(fp);
+       }
     } else {
         printf("Error : no program selected\n");
     }

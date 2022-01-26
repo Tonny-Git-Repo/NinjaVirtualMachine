@@ -10,7 +10,6 @@ int stack[MAX_SIZE];
 int sp = 0;
 
 
-
 bool isEmpty(){
     if(sp < 0){
         return true;
