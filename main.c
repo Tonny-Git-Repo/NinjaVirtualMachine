@@ -26,6 +26,11 @@ int main(int argc, char *argv[]) {
                   "  --version\tshow version and exit", "  --help\tshow this help and exit");
        } else if (strcmp(argv[1], "--version") == 0) {
             printf("Ninja Virtual Machine version %d (compiled %s, %s)\n", VERSION, __DATE__, __TIME__);
+       }
+       else if (strcmp(argv[1], "--debug") == 0) {
+           /** TO DO **/
+           printf("We are in the debug modus\n");
+
        }else {
            fp = fopen(argv[1],"rb");
            if(fp == NULL){

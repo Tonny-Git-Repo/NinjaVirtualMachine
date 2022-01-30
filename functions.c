@@ -92,6 +92,76 @@ void popl(int position){
     stack[frameP+position] = pop();
 }
 
+void eq(void){
+    if(pop() == pop()){
+        pushc(1);
+    }else{
+        pushc(0);
+    }
+}
+
+void ne(void){
+    int val2 = pop();
+    if(pop() != val2){
+        pushc(1);
+    } else {
+        pushc(0);
+    }
+}
+
+void lt(void){
+    int val2 = pop();
+    if(pop() < val2){
+        pushc(1);
+    }else{
+        pushc(0);
+    }
+}
+
+void le(void){
+    int val2 = pop();
+    if(pop() <= val2){
+        pushc(1);
+    } else {
+        pushc(0);
+    }
+}
+
+void gt(void){
+    int val2 = pop();
+    if(pop() > val2){
+        pushc(1);
+    }else{
+        pushc(0);
+    }
+}
+
+void ge(void){
+    int val2 = pop();
+    if(pop() >= val2){
+        pushc(1);
+    } else {
+        pushc(0);
+    }
+}
+
+void jmp(int target){
+    pc = target;
+}
+
+void brf(int target){
+    if(pop() == 0){
+        pc = target;
+    }
+}
+
+void brt(int target){
+    if(pop() == 1){
+        pc = target;
+    }
+}
+
+
 int launchProzess(unsigned int *prog){
     printf("Ninja Virtual Machine started\n");
     showExecution(prog);
